@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -20,8 +19,10 @@ const pgConfig: PostgresConnectionOptions = {
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot(pgConfig),
+    TypeOrmModule.forRoot({
+      ...pgConfig,
+      // entities: []
+    }),
   ],
   controllers: [AppController, TestController],
   providers: [AppService],
