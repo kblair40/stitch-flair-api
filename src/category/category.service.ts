@@ -27,8 +27,6 @@ export class CategoryService {
       console.log('SAVED CATEGORY:', savedCategory);
       return savedCategory;
     } catch (e) {
-      // console.log('detail', e.detail);
-      // console.log('routine', e.routine);
       if (e.routine && e.routine.slice(-6) === 'unique') {
         throw new BadRequestException('Title must be unique');
       } else {

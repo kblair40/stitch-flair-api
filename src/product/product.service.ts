@@ -35,15 +35,6 @@ export class ProductService {
 
     const categoryRepo = await this.dataSource.getRepository(Category);
     // const prodCategory = await categoryRepo.findBy({ id: input.category_id });
-    const prodCategory = await categoryRepo.find({
-      where: { id: input.category_id },
-      relations: { products: true },
-    });
-    console.log('\nProd Category:', prodCategory);
-    console.log('cat keys:', Object.keys(prodCategory));
-    // if (prodCategory.products) {
-    // prodCa
-    // }
 
     const product = await this.productRepository.create({
       name: input.name || '',
@@ -55,16 +46,23 @@ export class ProductService {
       image_url: input.image_url || '',
       category_id: input.category_id,
     });
-    // const product = await this.productRepository.create({
-    //   name: input.name || '',
-    //   price: input.price,
-    //   description: input.description || '',
-    //   category: input.category || '',
-    //   // category_id: input.category_id,
 
-    // });
     const savedProduct = await this.productRepository.save(product);
     console.log('\nSaved Product:', savedProduct, '\n');
+
+    const prodCategory = await categoryRepo.findOne({
+      where: { id: input.category_id },
+      relations: { products: true },
+    });
+    console.log('\nProd Category:', prodCategory);
+
+    if (prodCategory.products) {
+      prodCategory.products.push(savedProduct);
+    }
+
+    const savedCategory = await categoryRepo.save(prodCategory);
+    console.log('\nSAVED CATEGORY:', savedCategory, '\n');
+
     return savedProduct;
   }
 
