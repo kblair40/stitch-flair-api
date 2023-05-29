@@ -38,6 +38,7 @@ export class CategoryService {
   }
 
   findAll() {
+    return this.categoryService.find();
     return `This action returns all category`;
   }
 

@@ -9,5 +9,6 @@ export class CreateProductDto {
   on_sale: boolean;
   on_sale_price: number;
   image_url: string;
+  category_id: number;
   category: Category;
 }

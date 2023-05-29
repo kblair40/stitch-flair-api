@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 
+import { Category } from 'src/category/entities/category.entity';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -22,10 +23,17 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductService {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
-  ) {}
+    private dataSource: DataSource,
+  ) {
+    console.log('\n\n\n');
+    console.log('data source:', this.dataSource);
+    console.log('\n\n\n');
+  }
 
   async create(input: CreateProductDto): Promise<Product> {
     console.log('\nCreate Product Input:', input, '\n');
+
+    const categoryRepo = this.dataSource.getRepository(Category);
     const product = await this.productRepository.create({
       name: input.name || '',
       price: input.price,
