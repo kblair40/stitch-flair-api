@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { TestController } from './test/test.controller';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ProductModule } from './product/product.module';
+import { CategoryModule } from './category/category.module';
 
 const pgConfig: PostgresConnectionOptions = {
   type: 'postgres',
@@ -26,6 +27,7 @@ const pgConfig: PostgresConnectionOptions = {
       autoLoadEntities: true,
     }),
     ProductModule,
+    CategoryModule,
   ],
   controllers: [AppController, TestController],
   providers: [AppService],

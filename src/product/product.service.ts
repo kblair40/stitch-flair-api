@@ -18,13 +18,6 @@ export class ProductService {
     const savedProduct = await this.productRepository.save(product);
     console.log('\nSaved Product:', savedProduct, '\n');
     return savedProduct;
-    // const product = await this.productRepository.create({
-    //   name: input.name,
-    //   category: input.category,
-    // });
-    // return ;
-
-    // return 'This action adds a new product';
   }
 
   findAll() {
