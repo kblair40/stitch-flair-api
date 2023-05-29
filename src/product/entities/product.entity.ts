@@ -30,6 +30,6 @@ export class Product {
   @Column({ nullable: true })
   on_sale_price?: number;
 
-  @ManyToOne(() => Category, (category) => category.title)
+  @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 }

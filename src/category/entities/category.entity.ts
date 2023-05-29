@@ -6,11 +6,9 @@ export class Category {
   @PrimaryGeneratedColumn()
   id: number;
 
-  //   @OneToMany(() => Product, (product) => product.category_id)
-  @Column()
+  @Column({ unique: true })
   title: string;
 
-  //   @Column()
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
 }
