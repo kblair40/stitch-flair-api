@@ -12,11 +12,11 @@ export class Product {
   @Column({ nullable: true })
   description?: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'money' })
   price?: number;
 
-  //   @Column({ nullable: true })
-  //   category?: string;
+  @Column()
+  category_id: number;
 
   @Column({ nullable: true })
   image_url?: string;
@@ -27,7 +27,7 @@ export class Product {
   @Column({ default: false, nullable: true })
   on_sale?: boolean;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'money' })
   on_sale_price?: number;
 
   @ManyToOne(() => Category, (category) => category.products)

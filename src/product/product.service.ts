@@ -25,24 +25,35 @@ export class ProductService {
     @InjectRepository(Product) private productRepository: Repository<Product>,
     private dataSource: DataSource,
   ) {
-    console.log('\n\n\n');
-    console.log('data source:', this.dataSource);
-    console.log('\n\n\n');
+    // console.log('\n\n\n');
+    // console.log('data source:', this.dataSource);
+    // console.log('\n\n\n');
   }
 
   async create(input: CreateProductDto): Promise<Product> {
     console.log('\nCreate Product Input:', input, '\n');
 
-    const categoryRepo = this.dataSource.getRepository(Category);
+    const categoryRepo = await this.dataSource.getRepository(Category);
+    // const prodCategory = await categoryRepo.findBy({ id: input.category_id });
+    const prodCategory = await categoryRepo.find({
+      where: { id: input.category_id },
+      relations: { products: true },
+    });
+    console.log('\nProd Category:', prodCategory);
+    console.log('cat keys:', Object.keys(prodCategory));
+    // if (prodCategory.products) {
+    // prodCa
+    // }
+
     const product = await this.productRepository.create({
       name: input.name || '',
       price: input.price,
       description: input.description || '',
-      // category: input.category || '',
       featured: input.featured,
       on_sale: input.on_sale,
       on_sale_price: input.on_sale_price,
       image_url: input.image_url || '',
+      category_id: input.category_id,
     });
     // const product = await this.productRepository.create({
     //   name: input.name || '',
