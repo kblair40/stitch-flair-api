@@ -24,7 +24,7 @@ export class CategoryService {
     });
     try {
       const savedCategory = await this.categoryService.save(newCategory);
-      console.log('SAVED CATEGORY:', savedCategory);
+      console.log('Saved Category:', savedCategory);
       return savedCategory;
     } catch (e) {
       if (e.routine && e.routine.slice(-6) === 'unique') {
@@ -37,11 +37,10 @@ export class CategoryService {
 
   findAll() {
     return this.categoryService.find();
-    return `This action returns all category`;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} category`;
+    return this.categoryService.findOneOrFail({ where: { id } });
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {
