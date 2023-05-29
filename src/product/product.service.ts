@@ -12,9 +12,19 @@ export class ProductService {
     @InjectRepository(Product) private productRepository: Repository<Product>,
   ) {}
 
-  create(createProductDto: CreateProductDto) {
-    console.log('\ncreateProductDto:', createProductDto, '\n');
-    return 'This action adds a new product';
+  async create(input: CreateProductDto): Promise<Product> {
+    console.log('\nCreate Product Input:', input, '\n');
+    const product = await this.productRepository.create(input);
+    const savedProduct = await this.productRepository.save(product);
+    console.log('\nSaved Product:', savedProduct, '\n');
+    return savedProduct;
+    // const product = await this.productRepository.create({
+    //   name: input.name,
+    //   category: input.category,
+    // });
+    // return ;
+
+    // return 'This action adds a new product';
   }
 
   findAll() {
