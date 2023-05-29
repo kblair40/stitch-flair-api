@@ -1,35 +1,35 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Category } from 'src/category/entities/category.entity';
 
 @Entity()
 export class Product {
-  // might need autoincrementing type here...
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  name?: string;
 
-  @Column()
-  description: string;
+  @Column({ nullable: true })
+  description?: string;
 
-  @Column()
-  price: number;
+  @Column({ nullable: true })
+  price?: number;
 
-  @Column()
-  category: string;
+  //   @Column({ nullable: true })
+  //   category?: string;
 
-  @Column()
-  category_id: number;
+  @Column({ nullable: true })
+  image_url?: string;
 
-  @Column()
-  image_url: string;
+  @Column({ default: false, nullable: true })
+  featured?: boolean;
 
-  @Column({ default: false })
-  featured: boolean;
+  @Column({ default: false, nullable: true })
+  on_sale?: boolean;
 
-  @Column({ default: false })
-  on_sale: boolean;
+  @Column({ nullable: true })
+  on_sale_price?: number;
 
-  @Column()
-  on_sale_price: number;
+  @ManyToOne(() => Category, (category) => category.title)
+  category: Category;
 }
