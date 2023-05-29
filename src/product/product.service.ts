@@ -1,15 +1,24 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
+  constructor(
+    @InjectRepository(Product) private productRepository: Repository<Product>,
+  ) {}
+
   create(createProductDto: CreateProductDto) {
+    console.log('\ncreateProductDto:', createProductDto, '\n');
     return 'This action adds a new product';
   }
 
   findAll() {
-    return `This action returns all product`;
+    return this.productRepository.find();
   }
 
   findOne(id: number) {
