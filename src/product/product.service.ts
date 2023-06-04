@@ -24,17 +24,12 @@ export class ProductService {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
     private dataSource: DataSource,
-  ) {
-    // console.log('\n\n\n');
-    // console.log('data source:', this.dataSource);
-    // console.log('\n\n\n');
-  }
+  ) {}
 
   async create(input: CreateProductDto): Promise<Product> {
     console.log('\nCreate Product Input:', input, '\n');
 
     const categoryRepo = await this.dataSource.getRepository(Category);
-    // const prodCategory = await categoryRepo.findBy({ id: input.category_id });
 
     const product = await this.productRepository.create({
       name: input.name || '',
