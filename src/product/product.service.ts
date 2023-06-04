@@ -73,7 +73,14 @@ export class ProductService {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    try {
+      // const deleteRes = await this.productRepository.delete(id);
+      await this.productRepository.delete(id);
+      // console.log('DELETE RES:', deleteRes);
+    } catch (e) {
+      console.log('\nDelete Failed:', e);
+    }
     return `This action removes a #${id} product`;
   }
 }
