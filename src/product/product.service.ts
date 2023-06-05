@@ -51,12 +51,11 @@ export class ProductService {
     });
     console.log('\nProd Category:', prodCategory);
 
-    if (prodCategory.products) {
+    if (prodCategory?.products) {
       prodCategory.products.push(savedProduct);
+      const savedCategory = await categoryRepo.save(prodCategory);
+      console.log('\nSAVED CATEGORY:', savedCategory, '\n');
     }
-
-    const savedCategory = await categoryRepo.save(prodCategory);
-    console.log('\nSAVED CATEGORY:', savedCategory, '\n');
 
     return savedProduct;
   }
