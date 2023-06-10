@@ -18,6 +18,7 @@ export class CategoryService {
 
   async create(input: CreateCategoryDto) {
     console.log('Create Category Input:', input);
+    if (!input.title) throw new BadRequestException('Title must be provided');
     const newCategory = await this.categoryService.create({
       title: input.title,
       products: [],
