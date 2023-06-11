@@ -45,7 +45,7 @@ export class CategoryService {
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+    return this.categoryService.update(id, updateCategoryDto);
   }
 
   remove(id: number) {
