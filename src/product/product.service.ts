@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 
@@ -39,6 +39,7 @@ export class ProductService {
       on_sale: input.on_sale,
       on_sale_price: input.on_sale_price,
       image_url: input.image_url || '',
+      etsy_url: input.etsy_url,
     });
 
     const savedProduct = await this.productRepository.save(product);
@@ -67,8 +68,15 @@ export class ProductService {
     return this.productRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async updateProduct(id: number, updateProductDto: UpdateProductDto) {
+    try {
+      const res = await this.productRepository.update(id, updateProductDto);
+      console.log('\nUpdate res:', res);
+      return res;
+    } catch (e) {
+      console.log('\nUpdate Failed:', e);
+      return new InternalServerErrorException(JSON.stringify(e));
+    }
   }
 
   async remove(id: number) {
