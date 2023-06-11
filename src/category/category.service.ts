@@ -49,6 +49,6 @@ export class CategoryService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} category`;
+    return this.categoryService.delete(id);
   }
 }
