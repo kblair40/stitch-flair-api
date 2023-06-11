@@ -7,4 +7,5 @@ export class CreateProductDto {
   on_sale_price?: number;
   image_url: string;
   category_id: number;
+  etsy_url: string;
 }
