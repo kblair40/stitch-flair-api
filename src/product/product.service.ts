@@ -34,6 +34,7 @@ export class ProductService {
     const product = await this.productRepository.create({
       name: input.name || '',
       price: input.price,
+      category_id: input.category_id,
       description: input.description || '',
       featured: input.featured,
       on_sale: input.on_sale,
