@@ -7,18 +7,6 @@ import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
-// export class CreateProductDto {
-//   name: string;
-//   price: number;
-//   description?: string;
-//   category: string;
-//   category_id: number;
-//   featured: boolean;
-//   on_sale: boolean;
-//   on_sale_price: number;
-//   image_url: string;
-// }
-
 @Injectable()
 export class ProductService {
   constructor(
@@ -73,7 +61,12 @@ export class ProductService {
     try {
       const res = await this.productRepository.update(id, updateProductDto);
       console.log('\nUpdate res:', res);
-      return res;
+
+      if (res && res.affected === 1) {
+        return res;
+      } else {
+        throw new InternalServerErrorException('Update failed');
+      }
     } catch (e) {
       console.log('\nUpdate Failed:', e);
       return new InternalServerErrorException(JSON.stringify(e));
