@@ -14,7 +14,7 @@ export class Product {
   id: number;
 
   @Column({ unique: true })
-  name?: string;
+  name: string;
 
   @Column({ nullable: true })
   description?: string;
