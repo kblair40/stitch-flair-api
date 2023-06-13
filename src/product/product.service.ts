@@ -49,9 +49,14 @@ export class ProductService {
     return savedProduct;
   }
 
-  findAll() {
-    return this.productRepository.find();
+  async findAll() {
+    const allProducts = await this.productRepository.find();
+    console.log('\nallProducts:', allProducts, '\n');
+    return allProducts;
   }
+  // findAll() {
+  //   return this.productRepository.find();
+  // }
 
   findOne(id: number) {
     return this.productRepository.findOne({ where: { id } });

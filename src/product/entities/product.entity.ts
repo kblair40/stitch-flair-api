@@ -21,8 +21,8 @@ export class Product {
   @Column({ nullable: true })
   image_url?: string;
 
-  @Column({ nullable: true })
-  etsy_url?: string;
+  @Column()
+  etsy_url: string;
 
   @Column({ default: false, nullable: true })
   featured?: boolean;
