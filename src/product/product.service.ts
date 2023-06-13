@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
+import type { FindManyOptions } from 'typeorm';
 
 import { Category } from 'src/category/entities/category.entity';
 import { Product } from './entities/product.entity';
@@ -49,14 +50,10 @@ export class ProductService {
     return savedProduct;
   }
 
-  async findAll() {
-    const allProducts = await this.productRepository.find();
-    console.log('\nallProducts:', allProducts, '\n');
-    return allProducts;
+  findAll() {
+    const order: FindManyOptions<Product> = { order: { created_time: 'ASC' } };
+    return this.productRepository.find(order);
   }
-  // findAll() {
-  //   return this.productRepository.find();
-  // }
 
   findOne(id: number) {
     return this.productRepository.findOne({ where: { id } });
