@@ -5,10 +5,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import type { FindManyOptions } from 'typeorm';
 
 import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+
+type FindOptions = FindManyOptions<Category>;
 
 @Injectable()
 export class CategoryService {
@@ -36,8 +39,11 @@ export class CategoryService {
     }
   }
 
-  findAll() {
-    return this.categoryService.find();
+  async findAll() {
+    const config: FindOptions = { relations: { products: true } };
+    const allCategories = await this.categoryService.find(config);
+    console.log('All Categories:', allCategories);
+    return allCategories;
   }
 
   findOne(id: number) {
