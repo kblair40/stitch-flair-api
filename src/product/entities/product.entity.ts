@@ -40,7 +40,7 @@ export class Product {
   @Column({ nullable: true, type: 'money' })
   on_sale_price?: number;
 
-  @Column({ nullable: true, array: true })
+  @Column({ nullable: true, type: 'varchar', array: true })
   promos?: string[];
 
   // https://typeorm.io/entities#special-columns
