@@ -9,6 +9,7 @@ import { TestController } from './test/test.controller';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
+import { PromotionModule } from './promotion/promotion.module';
 
 const pgConfig: PostgresConnectionOptions = {
   type: 'postgres',
@@ -28,6 +29,7 @@ const pgConfig: PostgresConnectionOptions = {
     }),
     ProductModule,
     CategoryModule,
+    PromotionModule,
   ],
   controllers: [AppController, TestController],
   providers: [AppService],
