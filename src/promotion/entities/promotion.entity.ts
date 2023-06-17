@@ -11,7 +11,7 @@ export class Promotion {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'varchar' })
   text: string;
 
   @Column({ type: 'boolean', default: true })
