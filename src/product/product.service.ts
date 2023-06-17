@@ -4,6 +4,7 @@ import { Repository, DataSource } from 'typeorm';
 import type { FindManyOptions } from 'typeorm';
 
 import { Category } from 'src/category/entities/category.entity';
+import { Promotion } from 'src/promotion/entities/promotion.entity';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -19,6 +20,16 @@ export class ProductService {
     console.log('\nCreate Product Input:', input, '\n');
 
     const categoryRepo = await this.dataSource.getRepository(Category);
+    const promoRepo = await this.dataSource.getRepository(Promotion);
+
+    const promos = [];
+    if (input.promo_ids) {
+      for (const promoId of input.promo_ids) {
+        const promo = await promoRepo.find({ where: { id: promoId } });
+        console.log('\nFound Promo:', promo, '\n');
+        if (promo) promos.push(promo);
+      }
+    }
 
     const product = await this.productRepository.create({
       name: input.name || '',
@@ -30,6 +41,7 @@ export class ProductService {
       on_sale_price: input.on_sale_price,
       image_url: input.image_url || '',
       etsy_url: input.etsy_url,
+      promos,
     });
 
     const savedProduct = await this.productRepository.save(product);
@@ -39,12 +51,13 @@ export class ProductService {
       where: { id: input.category_id },
       relations: { products: true },
     });
-    console.log('\nProd Category:', prodCategory);
+    // console.log('\nProd Category:', prodCategory);
 
     if (prodCategory?.products) {
       prodCategory.products.push(savedProduct);
-      const savedCategory = await categoryRepo.save(prodCategory);
-      console.log('\nSAVED CATEGORY:', savedCategory, '\n');
+      await categoryRepo.save(prodCategory);
+      // const savedCategory = await categoryRepo.save(prodCategory);
+      // console.log('\nSAVED CATEGORY:', savedCategory, '\n');
     }
 
     return savedProduct;

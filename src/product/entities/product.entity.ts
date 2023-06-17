@@ -3,10 +3,13 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Category } from 'src/category/entities/category.entity';
+import { Promotion } from 'src/promotion/entities/promotion.entity';
 
 @Entity()
 export class Product {
@@ -40,8 +43,8 @@ export class Product {
   @Column({ nullable: true, type: 'money' })
   on_sale_price?: number;
 
-  @Column({ nullable: true, type: 'varchar', array: true })
-  promos?: string[];
+  // @Column({ nullable: true, type: 'varchar', array: true })
+  // promos?: string[];
 
   // https://typeorm.io/entities#special-columns
   @CreateDateColumn()
@@ -52,4 +55,8 @@ export class Product {
 
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
+
+  @ManyToMany(() => Promotion)
+  @JoinTable()
+  promos: Promotion[];
 }

@@ -38,15 +38,21 @@ export class PromotionService {
     return allPromos;
   }
 
+  async remove(id: number) {
+    try {
+      const deleteRes = await this.promoRepository.delete(id);
+      console.log('\nDelete Res:', deleteRes);
+    } catch (e) {
+      console.log('Failed to delete product:', e);
+      return new InternalServerErrorException(JSON.stringify(e));
+    }
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} promotion`;
   }
 
   update(id: number, updatePromotionDto: UpdatePromotionDto) {
     return `This action updates a #${id} promotion`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} promotion`;
   }
 }
