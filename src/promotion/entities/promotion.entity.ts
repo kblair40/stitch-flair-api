@@ -20,7 +20,7 @@ export class Promotion {
   @Column({
     type: 'enum',
     default: 'green',
-    enum: ['green', 'red', 'blue', 'orange', 'yellow', 'purple', 'peach'],
+    enum: ['green', 'red', 'blue', 'orange', 'purple', 'peach'],
   })
   color: string;
 

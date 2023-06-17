@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Promotion } from './entities/promotion.entity';
 import { CreatePromotionDto } from './dto/create-promotion.dto';
@@ -14,7 +14,6 @@ import { UpdatePromotionDto } from './dto/update-promotion.dto';
 export class PromotionService {
   constructor(
     @InjectRepository(Promotion) private promoRepository: Repository<Promotion>,
-    private dataSource: DataSource,
   ) {}
 
   async create(input: CreatePromotionDto) {

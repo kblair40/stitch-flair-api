@@ -17,6 +17,7 @@ export class PromotionController {
 
   @Post()
   create(@Body() createPromotionDto: CreatePromotionDto) {
+    console.log('\n\nCreate Args:', createPromotionDto, '\n\n');
     return this.promotionService.create(createPromotionDto);
   }
 
