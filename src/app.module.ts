@@ -18,7 +18,8 @@ const pgConfig: PostgresConnectionOptions = {
   username: process.env.PG_USER,
   password: process.env.PG_PASSWORD,
   database: 'stitchflair',
-  synchronize: false,
+  // synchronize: false,
+  synchronize: true,
 };
 
 @Module({
