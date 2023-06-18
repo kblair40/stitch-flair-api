@@ -81,7 +81,7 @@ export class ProductService {
   async updateProduct(id: number, input: UpdateProductDto) {
     console.log('\nINPUT:', input, '\n');
     try {
-      const foundProduct = await this.productRepository.findOne({
+      let foundProduct = await this.productRepository.findOne({
         where: { id },
         relations: { promos: true, category: true },
       });
@@ -89,37 +89,36 @@ export class ProductService {
         return new InternalServerErrorException('Could not find product');
       }
 
-      // const values: any = { ...input }; // todo: improve 'any'
+      const promos = [];
+      if (input.promo_ids) {
+        for (const promoId of input.promo_ids) {
+          const promoRepo = await this.dataSource.getRepository(Promotion);
+          const promo = await promoRepo.findOne({ where: { id: promoId } });
+          console.log('\nFound Promo:', promo, '\n');
+          if (promo) promos.push(promo);
+        }
+        console.log('\nAll Promos:', promos);
+      }
+
+      const values: any = { ...input }; // todo: improve 'any'
       if (input.promo_ids) {
         // delete input.promo_ids; // remove promo_ids, so promos can be saved in it's place
         const promoRepo = await this.dataSource.getRepository(Promotion);
         const promos = [];
         for (const promoId of input.promo_ids) {
-          const promo = await promoRepo.find({ where: { id: promoId } });
+          const promo = await promoRepo.findOne({ where: { id: promoId } });
           console.log('\nFound Promo:', promo, '\n');
           if (promo) promos.push(promo);
         }
-        // values.promos = promos;
         delete input.promo_ids; // remove promo_ids, so promos can be saved in it's place
         foundProduct.promos = promos;
+        foundProduct = await this.productRepository.save(foundProduct);
+        console.log('PROMO UPDATE:', foundProduct);
+
+        values.promos = promos;
       }
-
-      for (const [key, val] of Object.entries(input)) {
-        foundProduct[key] = val;
-      }
-
-      const savedProduct = await this.productRepository.save(foundProduct);
-      console.log('\nSAVED PRODUCT:', savedProduct);
-
-      // const res = await this.productRepository.update(id, values);
-      // const res = await this.productRepository.update(id, input);
-      // console.log('\nUpdate res:', res);
-
-      // if (res && res.affected === 1) {
-      //   return res;
-      // } else {
-      //   throw new InternalServerErrorException('Update failed');
-      // }
+      const res = await this.productRepository.update(id, input);
+      console.log('\nUpdate res:', res);
     } catch (e) {
       console.log('\nUpdate Failed:', e);
       return new InternalServerErrorException(JSON.stringify(e));
