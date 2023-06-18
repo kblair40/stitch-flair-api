@@ -1,7 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import type { FindManyOptions } from 'typeorm';
+import type {
+  FindManyOptions,
+  // FindOneOptions
+} from 'typeorm';
 
 import { Category } from 'src/category/entities/category.entity';
 import { Promotion } from 'src/promotion/entities/promotion.entity';
@@ -25,10 +28,11 @@ export class ProductService {
     const promos = [];
     if (input.promo_ids) {
       for (const promoId of input.promo_ids) {
-        const promo = await promoRepo.find({ where: { id: promoId } });
+        const promo = await promoRepo.findOne({ where: { id: promoId } });
         console.log('\nFound Promo:', promo, '\n');
         if (promo) promos.push(promo);
       }
+      console.log('\nAll Promos:', promos);
     }
 
     const product = await this.productRepository.create({
@@ -43,6 +47,7 @@ export class ProductService {
       etsy_url: input.etsy_url,
       promos,
     });
+    console.log('\nCREATED PRODUCT:', product);
 
     const savedProduct = await this.productRepository.save(product);
     console.log('\nSaved Product:', savedProduct, '\n');
@@ -51,7 +56,6 @@ export class ProductService {
       where: { id: input.category_id },
       relations: { products: true },
     });
-    // console.log('\nProd Category:', prodCategory);
 
     if (prodCategory?.products) {
       prodCategory.products.push(savedProduct);
@@ -64,24 +68,58 @@ export class ProductService {
   }
 
   findAll() {
-    const order: FindManyOptions<Product> = { order: { created_time: 'ASC' } };
-    return this.productRepository.find(order);
+    return this.productRepository.find({
+      order: { created_time: 'ASC' },
+      relations: { promos: true, category: true },
+    });
   }
 
   findOne(id: number) {
     return this.productRepository.findOne({ where: { id } });
   }
 
-  async updateProduct(id: number, updateProductDto: UpdateProductDto) {
+  async updateProduct(id: number, input: UpdateProductDto) {
+    console.log('\nINPUT:', input, '\n');
     try {
-      const res = await this.productRepository.update(id, updateProductDto);
-      console.log('\nUpdate res:', res);
-
-      if (res && res.affected === 1) {
-        return res;
-      } else {
-        throw new InternalServerErrorException('Update failed');
+      const foundProduct = await this.productRepository.findOne({
+        where: { id },
+        relations: { promos: true, category: true },
+      });
+      if (!foundProduct) {
+        return new InternalServerErrorException('Could not find product');
       }
+
+      // const values: any = { ...input }; // todo: improve 'any'
+      if (input.promo_ids) {
+        // delete input.promo_ids; // remove promo_ids, so promos can be saved in it's place
+        const promoRepo = await this.dataSource.getRepository(Promotion);
+        const promos = [];
+        for (const promoId of input.promo_ids) {
+          const promo = await promoRepo.find({ where: { id: promoId } });
+          console.log('\nFound Promo:', promo, '\n');
+          if (promo) promos.push(promo);
+        }
+        // values.promos = promos;
+        delete input.promo_ids; // remove promo_ids, so promos can be saved in it's place
+        foundProduct.promos = promos;
+      }
+
+      for (const [key, val] of Object.entries(input)) {
+        foundProduct[key] = val;
+      }
+
+      const savedProduct = await this.productRepository.save(foundProduct);
+      console.log('\nSAVED PRODUCT:', savedProduct);
+
+      // const res = await this.productRepository.update(id, values);
+      // const res = await this.productRepository.update(id, input);
+      // console.log('\nUpdate res:', res);
+
+      // if (res && res.affected === 1) {
+      //   return res;
+      // } else {
+      //   throw new InternalServerErrorException('Update failed');
+      // }
     } catch (e) {
       console.log('\nUpdate Failed:', e);
       return new InternalServerErrorException(JSON.stringify(e));

@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  // ManyToMany,
 } from 'typeorm';
+// import { Product } from 'src/product/entities/product.entity';
 
 @Entity()
 export class Promotion {
@@ -23,6 +25,9 @@ export class Promotion {
     enum: ['green', 'red', 'blue', 'orange', 'purple', 'peach'],
   })
   color: string;
+
+  // @ManyToMany(() => Product, (product) => product.promos)
+  // products: Product[];
 
   @CreateDateColumn()
   created_time: Date;

@@ -8,4 +8,5 @@ export class UpdateProductDto {
   image_url?: string;
   category_id: number;
   etsy_url?: string;
+  promo_ids?: number[];
 }
