@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -19,7 +15,10 @@ export class PromotionService {
   async create(input: CreatePromotionDto) {
     const { text } = input;
     if (!text || typeof text !== 'string' || !text.trim().length) {
-      throw new BadRequestException('Text property cannot be empty');
+      throw new HttpException(
+        'Text property cannot be empty',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     try {
@@ -28,7 +27,10 @@ export class PromotionService {
       return savedPromo;
     } catch (e) {
       console.log('Failed to save promotion:', e);
-      throw new InternalServerErrorException(JSON.stringify(e));
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -44,7 +46,10 @@ export class PromotionService {
       console.log('\nDelete Res:', deleteRes);
     } catch (e) {
       console.log('Failed to delete product:', e);
-      return new InternalServerErrorException(JSON.stringify(e));
+      throw new HttpException(
+        'Something went wrong:',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
