@@ -19,52 +19,59 @@ export class ProductService {
     private dataSource: DataSource,
   ) {}
 
-  async create(input: CreateProductDto): Promise<Product> {
+  async create(
+    input: CreateProductDto,
+  ): Promise<Product | InternalServerErrorException> {
     console.log('\nCreate Product Input:', input, '\n');
 
     const categoryRepo = await this.dataSource.getRepository(Category);
     const promoRepo = await this.dataSource.getRepository(Promotion);
 
-    const promos = [];
-    if (input.promo_ids) {
-      for (const promoId of input.promo_ids) {
-        const promo = await promoRepo.findOne({ where: { id: promoId } });
-        console.log('\nFound Promo:', promo, '\n');
-        if (promo) promos.push(promo);
+    try {
+      const promos = [];
+      if (input.promo_ids) {
+        for (const promoId of input.promo_ids) {
+          const promo = await promoRepo.findOne({ where: { id: promoId } });
+          console.log('\nFound Promo:', promo, '\n');
+          if (promo) promos.push(promo);
+        }
+        console.log('\nAll Promos:', promos);
       }
-      console.log('\nAll Promos:', promos);
+
+      const product = await this.productRepository.create({
+        name: input.name || '',
+        price: input.price,
+        category_id: input.category_id,
+        description: input.description || '',
+        featured: input.featured,
+        on_sale: input.on_sale,
+        on_sale_price: input.on_sale_price,
+        image_url: input.image_url || '',
+        etsy_url: input.etsy_url,
+        promos,
+      });
+      console.log('\nCREATED PRODUCT:', product);
+
+      const savedProduct = await this.productRepository.save(product);
+      console.log('\nSaved Product:', savedProduct, '\n');
+
+      const prodCategory = await categoryRepo.findOne({
+        where: { id: input.category_id },
+        relations: { products: true },
+      });
+
+      if (prodCategory?.products) {
+        prodCategory.products.push(savedProduct);
+        await categoryRepo.save(prodCategory);
+        // const savedCategory = await categoryRepo.save(prodCategory);
+        // console.log('\nSAVED CATEGORY:', savedCategory, '\n');
+      }
+
+      return savedProduct;
+    } catch (e) {
+      console.log('\n\nE:', e);
+      return new InternalServerErrorException(e.detail);
     }
-
-    const product = await this.productRepository.create({
-      name: input.name || '',
-      price: input.price,
-      category_id: input.category_id,
-      description: input.description || '',
-      featured: input.featured,
-      on_sale: input.on_sale,
-      on_sale_price: input.on_sale_price,
-      image_url: input.image_url || '',
-      etsy_url: input.etsy_url,
-      promos,
-    });
-    console.log('\nCREATED PRODUCT:', product);
-
-    const savedProduct = await this.productRepository.save(product);
-    console.log('\nSaved Product:', savedProduct, '\n');
-
-    const prodCategory = await categoryRepo.findOne({
-      where: { id: input.category_id },
-      relations: { products: true },
-    });
-
-    if (prodCategory?.products) {
-      prodCategory.products.push(savedProduct);
-      await categoryRepo.save(prodCategory);
-      // const savedCategory = await categoryRepo.save(prodCategory);
-      // console.log('\nSAVED CATEGORY:', savedCategory, '\n');
-    }
-
-    return savedProduct;
   }
 
   findAll() {
