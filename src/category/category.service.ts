@@ -61,14 +61,7 @@ export class CategoryService {
       return res;
     } catch (e) {
       console.log('remove e:', e);
-      // console.log('code:', e.code);
-      // console.log('detail:', e.detail);
-      // console.log('constraint:', e.constraint);
-      // console.log('e keys:', Object.keys(e));
-      // throw new InternalServerErrorException(e.detail);
       return new InternalServerErrorException(e.detail);
-      // throw new InternalServerErrorException(e.detail);
     }
-    // return this.categoryService.delete(id);
   }
 }
