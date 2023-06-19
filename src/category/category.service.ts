@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import type { FindManyOptions } from 'typeorm';
@@ -21,7 +17,10 @@ export class CategoryService {
 
   async create(input: CreateCategoryDto) {
     console.log('Create Category Input:', input);
-    if (!input.title) throw new BadRequestException('Title must be provided');
+    if (!input.title) {
+      throw new HttpException('Title must be provided', HttpStatus.BAD_REQUEST);
+    }
+
     const newCategory = await this.categoryService.create({
       title: input.title,
       products: [],
@@ -32,9 +31,12 @@ export class CategoryService {
       return savedCategory;
     } catch (e) {
       if (e.routine && e.routine.slice(-6) === 'unique') {
-        throw new BadRequestException('Title must be unique');
+        throw new HttpException('Title must be unique', HttpStatus.BAD_REQUEST);
       } else {
-        throw new InternalServerErrorException('Failed to save category');
+        throw new HttpException(
+          'Failed to save category',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
     }
   }
@@ -60,8 +62,11 @@ export class CategoryService {
       console.log('remove res:', res);
       return res;
     } catch (e) {
-      console.log('remove e:', e);
-      return new InternalServerErrorException(e.detail);
+      console.log('\nremove e:', e);
+      return new HttpException(
+        'Delete Failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

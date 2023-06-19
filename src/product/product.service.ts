@@ -24,7 +24,6 @@ export class ProductService {
 
   async create(input: CreateProductDto): Promise<Product> {
     console.log('\nCreate Product Input:', input, '\n');
-
     const categoryRepo = await this.dataSource.getRepository(Category);
     const promoRepo = await this.dataSource.getRepository(Promotion);
 
@@ -51,8 +50,6 @@ export class ProductService {
         etsy_url: input.etsy_url,
         promos,
       });
-      // console.log('\nCREATED PRODUCT:', product);
-
       const savedProduct = await this.productRepository.save(product);
       console.log('\nSaved Product:', savedProduct, '\n');
 
