@@ -1,13 +1,6 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  HttpException,
-  HttpStatus,
-  type HttpExceptionOptions,
-} from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-// import type { FindManyOptions, FindOneOptions } from 'typeorm';
 
 import { Category } from 'src/category/entities/category.entity';
 import { Promotion } from 'src/promotion/entities/promotion.entity';
@@ -96,7 +89,7 @@ export class ProductService {
         relations: { promos: true, category: true },
       });
       if (!foundProduct) {
-        return new InternalServerErrorException('Could not find product');
+        throw new HttpException('Could not find product', HttpStatus.NOT_FOUND);
       }
 
       const promos = [];
@@ -131,7 +124,10 @@ export class ProductService {
       console.log('\nUpdate res:', res);
     } catch (e) {
       console.log('\nUpdate Failed:', e);
-      return new InternalServerErrorException(JSON.stringify(e));
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -142,8 +138,11 @@ export class ProductService {
       // console.log('DELETE RES:', deleteRes);
     } catch (e) {
       console.log('\nDelete Failed:', e);
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-    return `This action removes a #${id} product`;
   }
 }
 
