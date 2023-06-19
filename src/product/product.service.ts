@@ -1,10 +1,13 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  HttpException,
+  HttpStatus,
+  type HttpExceptionOptions,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import type {
-  FindManyOptions,
-  // FindOneOptions
-} from 'typeorm';
+// import type { FindManyOptions, FindOneOptions } from 'typeorm';
 
 import { Category } from 'src/category/entities/category.entity';
 import { Promotion } from 'src/promotion/entities/promotion.entity';
@@ -19,9 +22,7 @@ export class ProductService {
     private dataSource: DataSource,
   ) {}
 
-  async create(
-    input: CreateProductDto,
-  ): Promise<Product | InternalServerErrorException> {
+  async create(input: CreateProductDto): Promise<Product> {
     console.log('\nCreate Product Input:', input, '\n');
 
     const categoryRepo = await this.dataSource.getRepository(Category);
@@ -50,7 +51,7 @@ export class ProductService {
         etsy_url: input.etsy_url,
         promos,
       });
-      console.log('\nCREATED PRODUCT:', product);
+      // console.log('\nCREATED PRODUCT:', product);
 
       const savedProduct = await this.productRepository.save(product);
       console.log('\nSaved Product:', savedProduct, '\n');
@@ -63,14 +64,19 @@ export class ProductService {
       if (prodCategory?.products) {
         prodCategory.products.push(savedProduct);
         await categoryRepo.save(prodCategory);
-        // const savedCategory = await categoryRepo.save(prodCategory);
-        // console.log('\nSAVED CATEGORY:', savedCategory, '\n');
       }
 
       return savedProduct;
     } catch (e) {
-      console.log('\n\nE:', e);
-      return new InternalServerErrorException(e.detail);
+      console.log('\n\nE:', e.detail);
+      if (e.detail.includes('name')) {
+        throw new HttpException(
+          'A product with that name already exists',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        throw new HttpException(e.detail, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
   }
 
