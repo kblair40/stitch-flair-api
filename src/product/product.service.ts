@@ -1,6 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
+import axios from 'axios';
 
 import { Category } from 'src/category/entities/category.entity';
 import { Promotion } from 'src/promotion/entities/promotion.entity';
@@ -31,6 +32,21 @@ export class ProductService {
         console.log('\nAll Promos:', promos);
       }
 
+      // const imgRes = await axios.get(input.image_url);
+      // console.log('IMG RES:', imgRes);
+
+      try {
+        const imgRes = await axios.get(input.image_url);
+        console.log('IMG RES:', imgRes);
+      } catch (e) {
+        console.log('\n\nINVALID IMAGE:', e);
+        throw 'That does not appear to be a valid Image URL';
+        // throw new HttpException(
+        //   'That does not appear to be a valid Image URL',
+        //   HttpStatus.BAD_REQUEST,
+        // );
+      }
+
       const product = await this.productRepository.create({
         name: input.name || '',
         price: input.price,
@@ -58,8 +74,13 @@ export class ProductService {
 
       return savedProduct;
     } catch (e) {
-      console.log('\n\nE:', e.detail);
-      if (e.detail.includes('name')) {
+      // console.log('\n\nE:', e.detail);
+      if (typeof e === 'string') {
+        throw new HttpException(
+          'That does not appear to be a valid Image URL',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else if (e.detail?.includes('name')) {
         throw new HttpException(
           'A product with that name already exists',
           HttpStatus.BAD_REQUEST,
