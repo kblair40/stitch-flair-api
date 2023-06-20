@@ -27,8 +27,17 @@ export class TextService {
     }
   }
 
-  findAll() {
-    return this.textService.find();
+  async findAll() {
+    let text: Text[] | Text = await this.textService.find();
+    console.log('\nRaw Text:', text);
+    if (text && Array.isArray(text)) {
+      text = text[0];
+      console.log('Returning Text:', text, '\n');
+      return text;
+    } else {
+      const status = HttpStatus.INTERNAL_SERVER_ERROR;
+      throw new HttpException('Something went wrong', status);
+    }
   }
 
   findOne(id: number) {
