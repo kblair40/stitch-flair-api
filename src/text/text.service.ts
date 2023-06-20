@@ -14,9 +14,10 @@ export class TextService {
     console.log('\n\nINPUT:', input, '\n\n');
 
     try {
-      const createRes = await this.textService.create(input);
-      console.log('\nCreate Res:', createRes);
-      return createRes;
+      const createdText = await this.textService.create(input);
+      const savedText = await this.textService.save(createdText);
+      console.log('\nSaved Text:', savedText);
+      return savedText;
     } catch (e) {
       console.log('\nFailed to create text:', e);
       throw new HttpException(
