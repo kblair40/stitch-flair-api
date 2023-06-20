@@ -1,1 +1,4 @@
-export class CreateTextDto {}
+export class CreateTextDto {
+  homeTitle?: string;
+  homeText?: string;
+}
