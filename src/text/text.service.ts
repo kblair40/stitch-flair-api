@@ -27,7 +27,7 @@ export class TextService {
   }
 
   findAll() {
-    return `This action returns all text`;
+    return this.textService.find();
   }
 
   findOne(id: number) {

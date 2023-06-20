@@ -11,10 +11,10 @@ export class Text {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   homeTitle: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   homeText: string;
 
   @CreateDateColumn()
