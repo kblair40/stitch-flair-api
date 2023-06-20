@@ -153,6 +153,7 @@ export class ProductService {
   }
 
   async remove(id: number) {
+    console.log('Product ID to remove:', id);
     try {
       // const deleteRes = await this.productRepository.delete(id);
       await this.productRepository.delete(id);
