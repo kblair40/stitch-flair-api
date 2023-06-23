@@ -5,7 +5,6 @@ import { DataSource } from 'typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TestController } from './test/test.controller';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
@@ -34,7 +33,7 @@ const pgConfig: PostgresConnectionOptions = {
     PromotionModule,
     TextModule,
   ],
-  controllers: [AppController, TestController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
