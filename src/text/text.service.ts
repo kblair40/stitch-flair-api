@@ -8,14 +8,16 @@ import { UpdateTextDto } from './dto/update-text.dto';
 
 @Injectable()
 export class TextService {
-  constructor(@InjectRepository(Text) private textService: Repository<Text>) {}
+  constructor(
+    @InjectRepository(Text) private textRepository: Repository<Text>,
+  ) {}
 
   async create(input: CreateTextDto) {
     console.log('\n\nINPUT:', input, '\n\n');
 
     try {
-      const createdText = await this.textService.create(input);
-      const savedText = await this.textService.save(createdText);
+      const createdText = await this.textRepository.create(input);
+      const savedText = await this.textRepository.save(createdText);
       console.log('\nSaved Text:', savedText);
       return savedText;
     } catch (e) {
@@ -28,7 +30,7 @@ export class TextService {
   }
 
   async findAll() {
-    let text: Text[] | Text = await this.textService.find();
+    let text: Text[] | Text = await this.textRepository.find();
     console.log('\nRaw Text:', text);
     if (text && Array.isArray(text)) {
       text = text[0];
@@ -45,7 +47,7 @@ export class TextService {
   }
 
   update(id: number, updateTextDto: UpdateTextDto) {
-    return `This action updates a #${id} text`;
+    return this.textRepository.update({ id }, updateTextDto);
   }
 
   remove(id: number) {
