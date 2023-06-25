@@ -33,8 +33,7 @@ export class ProductService {
       }
 
       try {
-        const imgRes = await axios.get(input.image_url);
-        console.log('IMG RES:', imgRes);
+        await axios.get(input.image_url);
       } catch (e) {
         console.log('\n\nINVALID IMAGE:', e);
         throw 'That does not appear to be a valid Image URL';
@@ -54,7 +53,7 @@ export class ProductService {
         on_sale_price: input.on_sale_price,
         image_url: input.image_url || '',
         etsy_url: input.etsy_url,
-        category: prodCategory,
+        category_id: input.category_id,
         promos,
       });
       const savedProduct = await this.productRepository.save(product);
@@ -67,7 +66,7 @@ export class ProductService {
 
       return savedProduct;
     } catch (e) {
-      // console.log('\n\nE:', e.detail);
+      console.log('\n\nE:', e);
       if (typeof e === 'string') {
         throw new HttpException(
           'That does not appear to be a valid Image URL',
@@ -96,7 +95,7 @@ export class ProductService {
   }
 
   async updateProduct(id: number, input: UpdateProductDto) {
-    console.log('\nINPUT:', input, '\n');
+    console.log('\nInput:', input, '\n');
     try {
       let foundProduct = await this.productRepository.findOne({
         where: { id },
@@ -104,17 +103,6 @@ export class ProductService {
       });
       if (!foundProduct) {
         throw new HttpException('Could not find product', HttpStatus.NOT_FOUND);
-      }
-
-      const promos = [];
-      if (input.promo_ids) {
-        for (const promoId of input.promo_ids) {
-          const promoRepo = await this.dataSource.getRepository(Promotion);
-          const promo = await promoRepo.findOne({ where: { id: promoId } });
-          console.log('\nFound Promo:', promo, '\n');
-          if (promo) promos.push(promo);
-        }
-        console.log('\nAll Promos:', promos);
       }
 
       const values: UpdateProductDto = { ...input };
@@ -129,7 +117,7 @@ export class ProductService {
         delete input.promo_ids; // remove promo_ids, so promos can be saved in it's place
         foundProduct.promos = promos;
         foundProduct = await this.productRepository.save(foundProduct);
-        console.log('PROMO UPDATE:', foundProduct);
+        console.log('Promo Update:', foundProduct);
 
         values.promos = promos;
       }

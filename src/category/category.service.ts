@@ -63,10 +63,7 @@ export class CategoryService {
       return res;
     } catch (e) {
       console.log('\nremove e:', e);
-      throw new HttpException(
-        'Delete Failed',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

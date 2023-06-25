@@ -25,8 +25,8 @@ export class Product {
   @Column({ nullable: true, type: 'money' })
   price?: number;
 
-  // @Column()
-  // category_id: number;
+  @Column()
+  category_id: number;
 
   @Column({ nullable: true })
   image_url?: string;
@@ -50,7 +50,7 @@ export class Product {
   @UpdateDateColumn()
   updated_time: Date;
 
-  @ManyToOne(() => Category, (category) => category.products, { cascade: true })
+  @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 
   @ManyToMany(() => Promotion, { cascade: true })
