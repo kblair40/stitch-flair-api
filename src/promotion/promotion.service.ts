@@ -53,11 +53,11 @@ export class PromotionService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} promotion`;
+  update(id: number, updatePromotionDto: UpdatePromotionDto) {
+    return this.promoRepository.update({ id }, updatePromotionDto);
   }
 
-  update(id: number, updatePromotionDto: UpdatePromotionDto) {
-    return `This action updates a #${id} promotion`;
+  findOne(id: number) {
+    return `This action returns a #${id} promotion`;
   }
 }
