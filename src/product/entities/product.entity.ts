@@ -25,8 +25,8 @@ export class Product {
   @Column({ nullable: true, type: 'money' })
   price?: number;
 
-  @Column()
-  category_id: number;
+  // @Column()
+  // category_id: number;
 
   @Column({ nullable: true })
   image_url?: string;
@@ -43,9 +43,6 @@ export class Product {
   @Column({ nullable: true, type: 'money' })
   on_sale_price?: number;
 
-  // @Column({ nullable: true, type: 'varchar', array: true })
-  // promos?: string[];
-
   // https://typeorm.io/entities#special-columns
   @CreateDateColumn()
   created_time: Date;
@@ -53,10 +50,9 @@ export class Product {
   @UpdateDateColumn()
   updated_time: Date;
 
-  @ManyToOne(() => Category, (category) => category.products)
+  @ManyToOne(() => Category, (category) => category.products, { cascade: true })
   category: Category;
 
-  // @ManyToMany(() => Promotion, (promo) => promo.products, { cascade: true })
   @ManyToMany(() => Promotion, { cascade: true })
   @JoinTable()
   promos: Promotion[];
