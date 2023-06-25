@@ -117,9 +117,8 @@ export class ProductService {
         console.log('\nAll Promos:', promos);
       }
 
-      const values: any = { ...input }; // todo: improve 'any'
+      const values: UpdateProductDto = { ...input };
       if (input.promo_ids) {
-        // delete input.promo_ids; // remove promo_ids, so promos can be saved in it's place
         const promoRepo = await this.dataSource.getRepository(Promotion);
         const promos = [];
         for (const promoId of input.promo_ids) {

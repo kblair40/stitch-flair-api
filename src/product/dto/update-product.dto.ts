@@ -1,3 +1,5 @@
+import { Promotion } from 'src/promotion/entities/promotion.entity';
+
 export class UpdateProductDto {
   name?: string;
   price?: number;
@@ -6,7 +8,8 @@ export class UpdateProductDto {
   on_sale?: boolean;
   on_sale_price?: number;
   image_url?: string;
-  category_id: number;
+  category_id?: number;
   etsy_url?: string;
   promo_ids?: number[];
+  promos?: Promotion[];
 }
