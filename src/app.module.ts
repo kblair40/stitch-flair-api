@@ -13,26 +13,29 @@ import { TextModule } from './text/text.module';
 
 console.log('\n\nprocess.env.PG_USER:', process.env.PG_USER);
 console.log('process.env.PG_PASSWORD:', process.env.PG_PASSWORD);
-// const pgConfig: PostgresConnectionOptions = {
-//   type: 'postgres',
-//   port: 5432,
-//   host: 'localhost',
-//   username: process.env.PG_USER,
-//   password: process.env.PG_PASSWORD,
-//   database: 'stitchflair',
-//   // synchronize: false,
-//   synchronize: true,
-// };
-const pgConfig: PostgresConnectionOptions = {
+
+const devConfig: PostgresConnectionOptions = {
+  type: 'postgres',
+  port: 5432,
+  host: 'localhost',
+  username: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
+  database: 'stitchflair',
+  synchronize: false,
+};
+
+const prodConfig: PostgresConnectionOptions = {
   type: 'postgres',
   port: 5432,
   host: process.env.SUPABASE_HOST,
   username: process.env.SUPABASE_USER,
   password: process.env.SUPABASE_PASSWORD,
   database: process.env.SUPABASE_DB_NAME,
-  // synchronize: false,
-  synchronize: true,
+  synchronize: false,
 };
+
+const pgConfig: PostgresConnectionOptions =
+  process.env.NODE_ENV === 'dev' ? devConfig : prodConfig;
 
 @Module({
   imports: [
