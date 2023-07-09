@@ -12,7 +12,7 @@ import { PromotionModule } from './promotion/promotion.module';
 import { TextModule } from './text/text.module';
 import { DbMergeModule } from './db-merge/db-merge.module';
 
-export const devConfig: PostgresConnectionOptions = {
+const devConfig: PostgresConnectionOptions = {
   type: 'postgres',
   port: 5432,
   host: 'localhost',
@@ -22,7 +22,7 @@ export const devConfig: PostgresConnectionOptions = {
   synchronize: false,
 };
 
-export const prodConfig: PostgresConnectionOptions = {
+const prodConfig: PostgresConnectionOptions = {
   type: 'postgres',
   port: 5432,
   host: process.env.SUPABASE_HOST,
