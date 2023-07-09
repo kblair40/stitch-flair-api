@@ -10,7 +10,7 @@ import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { PromotionModule } from './promotion/promotion.module';
 import { TextModule } from './text/text.module';
-import { DbMergeModule } from './db-merge/db-merge.module';
+// import { DbMergeModule } from './db-merge/db-merge.module';
 
 const devConfig: PostgresConnectionOptions = {
   type: 'postgres',
@@ -45,7 +45,7 @@ const pgConfig: PostgresConnectionOptions =
     CategoryModule,
     PromotionModule,
     TextModule,
-    DbMergeModule,
+    // DbMergeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
