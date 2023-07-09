@@ -37,7 +37,10 @@ const pgConfig: PostgresConnectionOptions =
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({ ...pgConfig, autoLoadEntities: true }),
+    TypeOrmModule.forRoot({
+      ...pgConfig,
+      autoLoadEntities: true,
+    }),
     ProductModule,
     CategoryModule,
     PromotionModule,

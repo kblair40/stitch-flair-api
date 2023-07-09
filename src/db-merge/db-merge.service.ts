@@ -100,18 +100,56 @@ export class DbMergeService {
     // console.log('Results:', { products, categories, promotions, text });
 
     try {
-      const catRes = await prodDataSource.manager.save(categories);
+      // const createPromises = categories.map((cat) => {
+      //   return prodDataSource.manager.create(Category, cat);
+      // });
+      // const createdCategories = await Promise.all(createPromises);
+      // const catRes = await prodDataSource.manager.save(createdCategories);
+      // const catRes = await prodDataSource.manager.save(categories);
       // const catRes = await prodDataSource.manager.upsert(Category, categories, {
       //   // conflictPaths: [],
       //   conflictPaths: ['id', 'title'],
       //   skipUpdateIfNoValuesChanged: true,
-      //   indexPredicate: '',
+      //   // What does 'primary-key' option for upsertType do?
+      //   // upsertType: 'on-duplicate-key-update',
+      //   // upsertType: 'primary-key',
+      //   upsertType: 'on-conflict-do-update',
       // });
       // const catRes = await prodDataSource.manager.upsert(Category, categories, [
       //   'id',
       //   'title',
       // ]);
-      console.log('cat res:', catRes);
+
+      // try {
+      //   const catRes = await prodDataSource
+      //     .createQueryBuilder()
+      //     .insert()
+      //     .into(Category)
+      //     .values(categories)
+      //     .orUpdate(['title'], ['id'], { skipUpdateIfNoValuesChanged: true })
+      //     .execute();
+
+      //   console.log('Cat Res:', catRes);
+      // } catch (e) {
+      //   console.log(`Failed insert:`, e);
+      // }
+
+      let i = 1;
+      for (const category of categories) {
+        try {
+          const catRes = await prodDataSource
+            .createQueryBuilder()
+            .insert()
+            .into(Category)
+            .values(category)
+            .execute();
+
+          console.log('cat res', `${i}:`, catRes);
+        } catch (e) {
+          console.log(`Failed insert ${i}:`, e);
+        }
+        i++;
+      }
 
       // for (const category of categories) {
       //   await prodDataSource.manager.upsert(category);
